@@ -145,15 +145,26 @@ const App = () => {
       personService
         .update(id, {...existingPerson, number: newNumber})
         .then(response => {
-          setPersons(persons.map(person => person.id !== id ? person : response.data))
+          setPersons(persons.map(person => person.id !== id ? person : response.data));
+          showNotification(`${existingPerson.name} entry was modified`);
         })
-        showNotification(`${existingPerson.name} entry was modified`)
+        .catch(error => {
+          console.log(error.response.data);
+          showErrorMessage(`Invalid name or number format`);
+        })
     }
     else {
       personService
         .create(newPerson)
-        .then(response => setPersons(persons.concat(response.data)));
-        showNotification(`${newPerson.name} was added`)
+        .then(response => 
+          {
+            setPersons(persons.concat(response.data));
+            showNotification(`${newPerson.name} was added`);
+          })
+        .catch(error => {
+          console.log(error.response.data);
+          showErrorMessage(`Invalid name or number format`);
+        })
     }
   }
 

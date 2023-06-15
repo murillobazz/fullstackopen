@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3001/persons';
+const baseUrl = 'https://backend-test-ici0.onrender.com/api/persons'; // Backend deployed on Render.
 
 const getAll = () => {
   return axios.get(baseUrl);
