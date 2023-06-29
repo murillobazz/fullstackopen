@@ -113,6 +113,42 @@ describe('content missing:', () => {
   })
 })
 
+test('succesfully deletes a blog', async () => {
+  const requestBody = {
+    title: 'apiTest',
+    author: 'apiTestAuthor',
+    url: 'apiTestURL',
+    likes: 1
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(requestBody)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+  
+  const response = await api.get('/api/blogs');
+  const blogs = response.body;
+
+  const id = blogs[blogs.length - 1].id
+  
+  await api
+    .delete(`/api/blogs/${id}`)
+    .expect(204)
+})
+
+test('succesfully updates a blog', async () => {
+  const response = await api.get('/api/blogs');
+  const blogs = response.body;
+  const {id, likes} = blogs[0];
+  const updatedLikes = { likes: likes + 1 }
+
+  await api
+    .put(`/api/blogs/${id}`)
+    .send(updatedLikes)
+    .expect(200)
+})
+
 // The afterAll method (from jest) used to run code (close the db connection) after running all tests.
 afterAll(async () => {
   await mongoose.connection.close();

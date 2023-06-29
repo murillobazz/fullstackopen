@@ -1,9 +1,19 @@
 GET http://localhost:3003/api/blogs
 ###
+DELETE http://localhost:3003/api/blogs/649ce06a07ef3da72918643f
+###
+PUT http://localhost:3003/api/blogs/648b775d21780044d54a7c93
+content-type: application/json
+
+{
+  "likes": 9000
+}
+###
 POST http://localhost:3003/api/blogs
 content-type: application/json
 
 {
+  "title": "testy",
   "author": "Myself",
   "url": "testurl2",
   "likes": 10
