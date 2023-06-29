@@ -64,6 +64,55 @@ test('succesfully creates a new blog', async () => {
   expect(response.body.length).toEqual(initialBlogs.length + 1);
 })
 
+test('defaults likes property to 0 if it is missing from body', async () => {
+  const reqBody = {
+    title: 'apiTest',
+    author: 'apiTestAuthor',
+    url: 'apiTestURL',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(reqBody)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const response = await api.get('/api/blogs');
+  const blogs = response.body;
+
+  expect(blogs[blogs.length - 1].likes).toBe(0);
+})
+
+describe('content missing:', () => {
+  test('title', async () => {
+    const reqBody = {
+      author: 'apiTestAuthor',
+      url: 'apiTestURL',
+      likes: 1
+    }
+  
+    await api
+      .post('/api/blogs')
+      .send(reqBody)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+  })
+
+  test('url', async () => {
+    const reqBody = {
+      author: 'apiTestAuthor',
+      title: 'apiTestTitle',
+      likes: 1
+    }
+  
+    await api
+      .post('/api/blogs')
+      .send(reqBody)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+  })
+})
+
 // The afterAll method (from jest) used to run code (close the db connection) after running all tests.
 afterAll(async () => {
   await mongoose.connection.close();
