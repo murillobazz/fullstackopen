@@ -16,8 +16,11 @@ content-type: application/json
   "title": "testy",
   "author": "Myself",
   "url": "testurl2",
-  "likes": 10
+  "likes": 10,
+  "user": "64aca48c6d92fb0d95d50579"
 }
+###
+GET http://localhost:3003/api/users
 ###
 POST http://localhost:3003/api/users
 content-type: application/json
