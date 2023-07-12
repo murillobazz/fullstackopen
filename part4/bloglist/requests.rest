@@ -11,13 +11,12 @@ content-type: application/json
 ###
 POST http://localhost:3003/api/blogs
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im11cmlsbG93IiwiaWQiOiI2NGFlODQ5NDY4NDZmNTViMDZkYzQ0NmIiLCJpYXQiOjE2ODkxNjA1Njd9.BUfIfpEUt4D4nWg2JX0wON0zwQeSKZUV9sh2qIxDgBg
 
 {
-  "title": "testy",
-  "author": "Myself",
-  "url": "testurl2",
-  "likes": 10,
-  "user": "64aca48c6d92fb0d95d50579"
+  "title": "The perks of being a star",
+  "author": "Jamal Murray",
+  "url": "www.yeye.com/ferasrt"
 }
 ###
 GET http://localhost:3003/api/users
@@ -26,7 +25,15 @@ POST http://localhost:3003/api/users
 content-type: application/json
 
 {
-  "username": "b",
-  "name": "Mr. Ronald McDonald",
-  "password": "imlovingit"
+  "username": "murillow",
+  "name": "Murillo Bazilio",
+  "password": "123qwe123"
+}
+###
+POST http://localhost:3003/api/login
+content-type: application/json
+
+{
+  "username" : "murillow",
+  "password" : "123qwe123"
 }
