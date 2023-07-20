@@ -20,6 +20,14 @@ mongoose.connect(MONGODB_URI)
 app.use(cors());
 app.use(express.json());
 
+// middleware to extract the token from a request
+const TokenExtractor = (req, res, next) => {
+  const authorization = req.get('authorization');
+  if (authorization &&  authorization.startsWith('Bearer ')) {
+    req.token = authorization.replace('Bearer ', '');
+  }
+  next();
+}
 const ErrorHandler = (err, req, res, next) => {
   console.log(err.message);
   if (err.name === 'ValidationError') {
@@ -35,6 +43,7 @@ const ErrorHandler = (err, req, res, next) => {
   next(err);
 };
 
+app.use(TokenExtractor);
 app.use('/api/blogs', blogsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);

@@ -9,20 +9,11 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs);
 })
 
-// function to extract the token from a request
-const getTokenFrom = request => {
-  const authorization = request.get('authorization');
-  if (authorization &&  authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '');
-  }
-  return null;
-}
-
 blogsRouter.post('/', async (request, response) => {
   const body = request.body.likes ? request.body : {...request.body, likes: 0};
   // the 'jwt.verify' method checks the validity of the token and decodes it,
   // returning the object it was based upon (if it is valid)
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
   if (!decodedToken.id) {
     return response.status(401).json({
       error: 'invalid token'
@@ -47,6 +38,27 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
+  const blog = await Blog.findById(request.params.id);
+
+  if (!decodedToken.id) {
+    return response.status(401).json({
+      error: 'invalid token'
+    });
+  };
+
+  if (!blog) {
+    return response.status(404).json({
+      error: 'blog does not exist'
+    })
+  }
+
+  if (blog.user.toString() !== decodedToken.id) {
+    return response.status(401).json({
+      error: 'unauthorized user'
+    });
+  };
+
   try {
     await Blog.findByIdAndRemove(request.params.id);
     response.status(204).end();
